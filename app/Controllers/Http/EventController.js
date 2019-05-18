@@ -6,7 +6,7 @@ class EventController {
   async index({ request, auth }) {
     const { page, date } = request.get();
 
-    let query = Event.query().withs('user');
+    let query = Event.query().with('user');
     query = query.where('user_id', '=', auth.user.id);
 
     if (date) {
