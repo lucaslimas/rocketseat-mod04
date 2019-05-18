@@ -1,13 +1,12 @@
 const Antl = use('Antl');
-class Session {
+class Shared {
   get validatorAll() {
     return true;
   }
 
   get rules() {
     return {
-      email: 'required|email',
-      password: 'required',
+      shared: 'required|email',
     };
   }
 
@@ -16,4 +15,4 @@ class Session {
   }
 }
 
-module.exports = Session;
+module.exports = Shared;

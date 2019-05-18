@@ -1,3 +1,4 @@
+const Antl = use('Ant');
 class ForgotPassword {
   get validatorAll() {
     return true;
@@ -8,6 +9,10 @@ class ForgotPassword {
       email: 'required|email',
       redirect_url: 'required|url',
     };
+  }
+
+  get messages() {
+    return Antl.list('validation');
   }
 }
 

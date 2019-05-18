@@ -1,3 +1,4 @@
+const Antl = use('Antl');
 class ResetPassword {
   get validatorAll() {
     return true;
@@ -8,6 +9,10 @@ class ResetPassword {
       token: 'required',
       password: 'required|confirmed',
     };
+  }
+
+  get messages() {
+    return Antl.list('validation');
   }
 }
 

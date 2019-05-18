@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable camelcase */
 const User = use('App/Models/User');
 const Hash = use('Hash');
@@ -9,36 +10,30 @@ class UserController {
     return user;
   }
 
-  async update({ request, response }) {
+  async update({ request, response, auth: { user } }) {
     try {
-      const {
-        username, email, oldPassword, password, password_confirmation,
-      } = request.all();
+      const { username, oldPassword, password } = request.all();
 
-      const user = await User.findByOrFail('email', email);
+      if (password) {
+        const isCorrect = await Hash.verify(oldPassword, user.password);
 
-      // Verifica se a senha está correta
-      const isSame = await Hash.verify(oldPassword, user.password);
+        if (!isCorrect) {
+          return response.status(400).send({
+            error: {
+              message: 'Senha inválida',
+            },
+          });
+        }
 
-      if (!isSame) {
-        return response.status(400).send({
-          error: {
-            message: 'Senha inválida',
-          },
+        user.merge({
+          username,
+          password,
+        });
+      } else {
+        user.merge({
+          username,
         });
       }
-
-      if (password !== password_confirmation) {
-        return response.status(400).send({
-          error: {
-            message: 'Confirmação da senha é diferente da senha',
-          },
-        });
-      }
-
-      user.username = username;
-      user.password = password;
-
       await user.save();
     } catch (err) {
       return response.status(err.status).send({

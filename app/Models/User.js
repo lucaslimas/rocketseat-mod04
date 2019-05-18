@@ -6,6 +6,7 @@ class User extends Model {
     super.boot();
     this.addHook('beforeSave', async (userInstance) => {
       if (userInstance.dirty.password) {
+        // eslint-disable-next-line no-param-reassign
         userInstance.password = await Hash.make(userInstance.password);
       }
     });
@@ -13,6 +14,10 @@ class User extends Model {
 
   tokens() {
     return this.hasMany('App/Models/Token');
+  }
+
+  events() {
+    return this.hasMany('App/Models/Event');
   }
 }
 
